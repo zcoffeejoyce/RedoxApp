@@ -23,89 +23,89 @@ PULL_REQUESTS = {}
 
 QUERY = """
 query orgLevel {{
-	organization(login: "{org}") {{
-		name
-		repositories(first: {pageSize}, after: {rCursor}) {{
-      	  	nodes {{
-            	id
-            	name
-            	pullRequests(first: {pageSize}) {{
-            		nodes {{
-            			...pullRequestFields
-            		}}
-              		...pullConnection
-            	}}
-          	}}
-      		...repoConnection
-    	}}
-  	}}
+  organization(login: "{org}") {{
+    name
+    repositories(first: {pageSize}, after: {rCursor}) {{
+      nodes {{
+        id
+        name
+        pullRequests(first: {pageSize}) {{
+          nodes {{
+            ...pullRequestFields
+          }}
+          ...pullConnection
+        }}
+      }}
+      ...repoConnection
+    }}
+  }}
 }}
 query repoLevel {{
-	repository(owner:"{org}", name:"{repoName}") {{
-		id
-		name
-    	pullRequests(first: {pageSize}, after: {pCursor}) {{
-    		nodes {{
-    			...pullRequestFields
-            }}
-            ...pullConnection
-        }}
+  repository(owner:"{org}", name:"{repoName}") {{
+    id
+	name
+    pullRequests(first: {pageSize}, after: {pCursor}) {{
+      nodes {{
+        ...pullRequestFields
+      }}
+      ...pullConnection
     }}
+  }}
 }}
 
 fragment pullConnection on PullRequestConnection {{
-	totalCount
-	pageInfo {{
-		endCursor
-		hasNextPage
-	}}
+  totalCount
+  pageInfo {{
+    endCursor
+	hasNextPage
+  }}
 }}
 
 fragment repoConnection on RepositoryConnection {{
-	totalCount
-	pageInfo {{
-		endCursor
-		hasNextPage
-	}}
+  totalCount
+  pageInfo {{
+    endCursor
+	hasNextPage
+  }}
 }}
 
 fragment pullRequestFields on PullRequest {{
 # Summary Fields
-	id
-	url
-	title
-	number
-	state
+  id
+  url
+  title
+  number
+  state
 # Changes
-	additions
-	changedFiles
-	deletions
-	commits(first: 1) {{totalCount}}
-	files(first: 1) {{totalCount}}
+  additions
+  changedFiles
+  deletions
+  commits(first: 1) {{totalCount}}
+  files(first: 1) {{totalCount}}
 # MetaData
-	activeLockReason
-	closed
-	closedAt
-	createdAt
-    lastEditedAt
-    locked
-    merged
-    mergeable
-    mergedAt
-    publishedAt
-    repository {{name}}
-    reviewRequests(first: 1) {{totalCount}}
-    updatedAt
+  activeLockReason
+  closed
+  closedAt
+  createdAt
+  lastEditedAt
+  locked
+  merged
+  mergeable
+  mergedAt
+  publishedAt
+  repository {{name}}
+  reviewRequests(first: 1) {{totalCount}}
+  updatedAt
 # People
-	author {{login}}
-    authorAssociation
-	editor {{login}}
-	participants(first: 1) {{totalCount}}
+  author {{login}}
+  authorAssociation
+  editor {{login}}
+  participants(first: 1) {{totalCount}}
 # Content
-	bodyText
-	comments(first: 1) {{totalCount}}
-	labels(first: 1) {{totalCount}}
-    reviews(first: 1) {{totalCount}}
+  bodyText
+  comments(first: 1) {{totalCount}}
+  labels(first: 1) {{totalCount}}
+  reviews(first: 1) {{totalCount}}
 }}
 """
 
@@ -149,8 +149,8 @@ class PullRequest():
 
 def call_api(query, opName, token=API_TOKEN):
 	"""
-		Handles a single call to the Github API using a GraphQL query
-		query - The GraphQL query to send
+	Handles a single call to the Github API using a GraphQL query
+	query - The GraphQL query to send
 	"""
 	header = {"Authorization": token}
 	json = {
@@ -166,8 +166,8 @@ def call_api(query, opName, token=API_TOKEN):
 
 def load_pull_requests(token, org):
 	"""
-		Master process to orchestrate establishing the GraphQL query, 
-		calling the API to retrieve all necessary data, and storing it in memory. 
+	Master process to orchestrate establishing the GraphQL query, 
+	calling the API to retrieve all necessary data, and storing it in memory. 
 	"""
 	hasNextRepoPage = True
 	repoCursor = "null"
@@ -188,8 +188,8 @@ def load_pull_requests(token, org):
 
 def process_repository(repoJson, token, org):
 	"""
-		Process all pull requests for a single repository. Continue to query against
-		subsequent pullRequest pages if necessary.
+	Process all pull requests for a single repository. Continue to query against
+	subsequent pullRequest pages if necessary.
 	"""
 	repoName = repoJson["name"]
 	continueProcessing = True
@@ -215,8 +215,8 @@ def process_repository(repoJson, token, org):
 	
 def process_pull_request(prJson):
 	"""
-		Creates a PullRequest object
-		Translates the JSON query response into a local PullRequest object we can store.
+	Creates a PullRequest object
+	Translates the JSON query response into a local PullRequest object we can store.
 	"""
 	pullReq = PullRequest(prJson.get("id"))
 	pullReq.updateFromJSON(prJson)
