@@ -43,7 +43,7 @@ query orgLevel {{
 query repoLevel {{
   repository(owner:"{org}", name:"{repoName}") {{
     id
-	name
+    name
     pullRequests(first: {pageSize}, after: {pCursor}) {{
       nodes {{
         ...pullRequestFields
@@ -57,7 +57,7 @@ fragment pullConnection on PullRequestConnection {{
   totalCount
   pageInfo {{
     endCursor
-	hasNextPage
+    hasNextPage
   }}
 }}
 
@@ -65,7 +65,7 @@ fragment repoConnection on RepositoryConnection {{
   totalCount
   pageInfo {{
     endCursor
-	hasNextPage
+    hasNextPage
   }}
 }}
 
