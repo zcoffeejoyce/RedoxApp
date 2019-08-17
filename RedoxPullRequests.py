@@ -12,7 +12,7 @@ see you interact directly with the Github API. Other than that, use whatever too
 import requests
 
 # Constants used for accessing Github API
-API_TOKEN = "token db29f7513435cbbde9fa9c3863e70346dc4401bc"
+API_TOKEN = "token 5187c8dca503cd910c777a5d76e2253cec4f22e8"
 GITHUB_ENDPOINT = "https://api.github.com/graphql"
 TARGET_ORG = "ramda"
 MAX_PAGE_SIZE = 100  # Set by Github API
@@ -80,8 +80,6 @@ fragment pullRequestFields on PullRequest {{
   additions
   changedFiles
   deletions
-  commits(first: 1) {{totalCount}}
-  files(first: 1) {{totalCount}}
 # MetaData
   activeLockReason
   closed
@@ -94,18 +92,9 @@ fragment pullRequestFields on PullRequest {{
   mergedAt
   publishedAt
   repository {{name}}
-  reviewRequests(first: 1) {{totalCount}}
   updatedAt
-# People
-  author {{login}}
-  authorAssociation
-  editor {{login}}
-  participants(first: 1) {{totalCount}}
 # Content
   bodyText
-  comments(first: 1) {{totalCount}}
-  labels(first: 1) {{totalCount}}
-  reviews(first: 1) {{totalCount}}
 }}
 """
 
@@ -122,8 +111,6 @@ class PullRequest():
 		self.additions = json.get("additions", 0)
 		self.changedFiles = json.get("changedFiles", 0)
 		self.deletions = json.get("deletions", 0)
-		self.commitsCount = json.get("commits", {}).get("totalCount", 0)
-		self.filesCount = json.get("files", {}).get("totalCount", 0)
 		self.activeLockReason = json.get("activeLockReason", "")
 		self.closed = json.get("closed", False)
 		self.closedAt = json.get("closedAt", "")
@@ -135,16 +122,8 @@ class PullRequest():
 		self.mergedAt = json.get("mergedAt", "")
 		self.publishedAt = json.get("publishedAt", "")
 		self.repository = json.get("repository", {}).get("name", "")
-		self.reviewRequestsCount = json.get("reviewRequests", {}).get("totalCount", 0)
 		self.updatedAt = json.get("updatedAt", "")
-		self.author = json.get("author", {}).get("login", "")
-		self.authorAssociation = json.get("authorAssociation", "")
-		self.editor = json.get("editor", {}).get("login", "")
-		self.participantsCount = json.get("participants", {}).get("totalCount", 0)
 		self.bodyText = json.get("bodyText", "")
-		self.commentsCount = json.get("comments", {}).get("totalCount", 0)
-		self.labelsCount = json.get("labels", {}).get("totalCount", 0)
-		self.reviewsCount = json.get("reviews", {}).get("totalCount", 0)
 		
 
 def call_api(query, opName, token=API_TOKEN):
@@ -175,7 +154,7 @@ def load_pull_requests(token, org):
 	while hasNextRepoPage:
 		query = QUERY.format(org=org, pageSize=MAX_PAGE_SIZE, repoName="", rCursor=repoCursor, pCursor="null")
 		result = call_api(query, "orgLevel", token)
-		print(result) #ZCJ
+
 		repositories = result["data"]["organization"]["repositories"]
 		for repo in repositories["nodes"]:
 			process_repository(repo, token, org)
