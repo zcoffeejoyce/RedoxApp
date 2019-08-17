@@ -12,7 +12,7 @@ see you interact directly with the Github API. Other than that, use whatever too
 import requests
 
 # Constants used for accessing Github API
-API_TOKEN = "token 5187c8dca503cd910c777a5d76e2253cec4f22e8"
+API_TOKEN = "token ABC123"	# Update Token as needed
 GITHUB_ENDPOINT = "https://api.github.com/graphql"
 TARGET_ORG = "ramda"
 MAX_PAGE_SIZE = 100  # Set by Github API
