@@ -7,6 +7,7 @@ for a Github organization.
 For the part you do on your own: 
 Write some code that will retrieve all pull requests for the Ramda organization 
 using the Github web API and store the results in memory. When we pair, we will use 
+this collection of pull requests to answer questions like "how many pull requests were 
 merged week over week across the organization?" (as a simple example).
 
 Do not use a pre-existing Github library. We want to see you interact directly 
